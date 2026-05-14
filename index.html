@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>숨은 영웅을 찾아라 — Hidden Heroes Activity</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-50: #E6F1FB; --blue-200: #85B7EB; --blue-600: #185FA5; --blue-800: #0C447C;
+    --green-50: #EAF3DE; --green-200: #97C459; --green-600: #3B6D11;
+    --amber-50: #FAEEDA; --amber-200: #EF9F27; --amber-600: #854F0B;
+    --teal-50: #E1F5EE; --teal-600: #0F6E56;
+    --pink-50: #FBEAF0; --pink-600: #993556;
+    --purple-50: #EEEDFE; --purple-600: #534AB7;
+    --gray-50: #F7F6F2; --gray-100: #EFEDE7; --gray-300: #C8C6BC;
+    --gray-500: #888780; --gray-800: #2C2C2A;
+    --border: #D8D6CE; --radius: 10px; --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F0EDE6;
+    color: var(--gray-800);
+    padding: 24px 16px 80px;
+  }
+
+  .page {
+    max-width: 780px; margin: 0 auto;
+    background: white; border-radius: 16px;
+    overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,0.10);
+  }
+
+  /* HEADER */
+  .page-header {
+    background: var(--gray-800); color: white;
+    padding: 28px 32px 22px; position: relative; overflow: hidden;
+  }
+  .page-header::before {
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.04);
+  }
+  .page-header::after {
+    content:''; position:absolute; right:40px; bottom:-60px;
+    width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,0.03);
+  }
+  .header-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:6px; }
+  .header-title { font-family:'DM Serif Display',serif; font-size:28px; font-weight:400; color:white; margin-bottom:4px; }
+  .header-sub { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:18px; }
+  .info-row { display:flex; gap:12px; flex-wrap:wrap; }
+  .info-field { display:flex; align-items:center; gap:6px; font-size:12px; color:rgba(255,255,255,0.6); }
+  .info-input {
+    background:rgba(255,255,255,0.08); border:none;
+    border-bottom:1px solid rgba(255,255,255,0.3);
+    color:white; font-family:'Noto Sans KR',sans-serif; font-size:13px;
+    padding:2px 6px; outline:none; width:80px;
+  }
+  .info-input::placeholder { color:rgba(255,255,255,0.3); }
+  .info-input:focus { border-bottom-color:white; }
+  .info-input.wide { width:110px; }
+
+  /* PROGRESS */
+  .prog-wrap { margin-top:14px; }
+  .progress-bar { height:4px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; margin-bottom:5px; }
+  .progress-fill { height:100%; background:#5DCAA5; border-radius:2px; transition:width 0.4s ease; width:0%; }
+  .progress-label { font-size:11px; color:rgba(255,255,255,0.5); text-align:right; }
+
+  /* BODY */
+  .body { padding:28px 32px; }
+
+  /* SECTION */
+  .section { margin-bottom:22px; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+  .sec-head { display:flex; align-items:center; gap:10px; padding:11px 16px; border-bottom:1px solid var(--border); }
+  .sec-num { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .sec-title { font-size:14px; font-weight:700; color:var(--gray-800); flex:1; }
+  .sec-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-weight:500; }
+  .sec-body { padding:13px 16px; }
+  .sec-desc { font-size:12px; color:var(--gray-500); line-height:1.7; margin-bottom:11px; }
+
+  /* TAGS */
+  .tag-group { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:11px; }
+  .tag {
+    font-size:12px; border:1px solid var(--border); border-radius:20px;
+    padding:4px 12px; cursor:pointer; color:var(--gray-500); background:white;
+    transition:all 0.15s; user-select:none; -webkit-tap-highlight-color:transparent;
+  }
+  .tag.on { background:var(--blue-50); color:var(--blue-800); border-color:var(--blue-200); font-weight:500; }
+
+  /* QUALITY */
+  .quality-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:6px; margin-bottom:11px; }
+  .q-card { border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; cursor:pointer; transition:all 0.15s; -webkit-tap-highlight-color:transparent; }
+  .q-card.on { background:var(--green-50); border-color:var(--green-200); }
+  .q-ko { font-size:12px; font-weight:700; color:var(--gray-800); }
+  .q-card.on .q-ko { color:var(--green-600); }
+  .q-en { font-size:11px; color:var(--gray-500); }
+  .q-card.on .q-en { color:var(--green-600); opacity:0.8; }
+
+  /* INPUTS */
+  .field-group { margin-bottom:9px; }
+  .field-label { font-size:11px; color:var(--gray-500); margin-bottom:4px; font-weight:500; }
+  textarea {
+    width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:8px 10px; font-family:'Noto Sans KR',sans-serif; font-size:13px;
+    color:var(--gray-800); resize:vertical; min-height:58px; outline:none;
+    background:var(--gray-50); line-height:1.7; transition:border-color 0.15s, background 0.15s;
+  }
+  textarea:focus { border-color:var(--blue-200); background:white; }
+  input[type="text"] {
+    width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:7px 10px; font-family:'Noto Sans KR',sans-serif; font-size:13px;
+    color:var(--gray-800); outline:none; background:var(--gray-50);
+    transition:border-color 0.15s, background 0.15s;
+  }
+  input[type="text"]:focus { border-color:var(--blue-200); background:white; }
+  input[type="text"]::placeholder, textarea::placeholder { color:var(--gray-300); }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* SEARCH TIP */
+  .search-tip { background:var(--blue-50); border-left:3px solid var(--blue-200); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:8px 12px; font-size:12px; color:var(--blue-800); line-height:1.7; margin-bottom:9px; }
+  .kw-chips { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:11px; }
+  .kw-chip { font-size:11px; background:white; border:1px solid var(--border); border-radius:12px; padding:3px 10px; color:var(--gray-500); }
+
+  /* PROFILE */
+  .profile-card { background:var(--gray-50); border:1px solid var(--border); border-radius:var(--radius); padding:13px; }
+  .avatar-row { display:flex; align-items:center; gap:12px; margin-bottom:11px; }
+  .avatar { width:46px; height:46px; border-radius:50%; background:var(--blue-50); border:1px solid var(--blue-200); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+
+  /* ENGLISH BLANKS */
+  .en-box { background:var(--gray-50); border:1px solid var(--border); border-radius:var(--radius-sm); padding:13px; }
+  .en-line { font-size:14px; line-height:2.6; color:var(--gray-800); display:flex; flex-wrap:wrap; align-items:baseline; gap:4px; }
+  .en-blank {
+    border-bottom:2px solid var(--gray-800); min-width:120px; flex:0 0 auto;
+    background:transparent; border-top:none; border-left:none; border-right:none; border-radius:0;
+    padding:0 4px 2px; font-size:14px; color:var(--gray-800);
+    font-family:'Noto Sans KR',sans-serif; outline:none;
+  }
+  .en-blank:focus { border-bottom-color:var(--blue-600); background:var(--blue-50); }
+
+  /* STARS */
+  .star-row { display:flex; gap:4px; margin-top:5px; }
+  .star { font-size:26px; cursor:pointer; color:var(--gray-300); transition:color 0.1s; user-select:none; -webkit-tap-highlight-color:transparent; }
+  .star.lit { color:var(--amber-200); }
+
+  /* SECTION COLOR THEMES */
+  .s1 .sec-head { background:var(--blue-50); }
+  .s1 .sec-num { background:var(--blue-800); color:white; }
+  .s1 .sec-badge { background:var(--blue-50); color:var(--blue-600); }
+  .s2 .sec-head { background:var(--green-50); }
+  .s2 .sec-num { background:var(--green-600); color:white; }
+  .s2 .sec-badge { background:var(--green-50); color:var(--green-600); }
+  .s3 .sec-head { background:var(--pink-50); }
+  .s3 .sec-num { background:var(--pink-600); color:white; }
+  .s3 .sec-badge { background:var(--pink-50); color:var(--pink-600); }
+  .s4 .sec-head { background:var(--amber-50); }
+  .s4 .sec-num { background:var(--amber-600); color:white; }
+  .s4 .sec-badge { background:var(--amber-50); color:var(--amber-600); }
+  .s5 .sec-head { background:var(--teal-50); }
+  .s5 .sec-num { background:var(--teal-600); color:white; }
+  .s5 .sec-badge { background:var(--teal-50); color:var(--teal-600); }
+  .s6 .sec-head { background:var(--purple-50); }
+  .s6 .sec-num { background:var(--purple-600); color:white; }
+  .s6 .sec-badge { background:var(--purple-50); color:var(--purple-600); }
+
+  /* BOTTOM BAR */
+  .bottom-bar {
+    position:fixed; bottom:0; left:0; right:0;
+    background:white; border-top:1px solid var(--border);
+    padding:12px 24px; display:flex; align-items:center;
+    justify-content:space-between; gap:12px;
+    z-index:100; box-shadow:0 -4px 20px rgba(0,0,0,0.07);
+  }
+  .bar-hint { font-size:12px; color:var(--gray-500); line-height:1.5; }
+  .bar-hint span { color:var(--gray-300); font-size:11px; }
+  .print-btn {
+    background:var(--gray-800); color:white; border:none;
+    border-radius:var(--radius-sm); padding:11px 28px;
+    font-family:'Noto Sans KR',sans-serif; font-size:14px; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; gap:8px;
+    transition:opacity 0.15s; white-space:nowrap;
+  }
+  .print-btn:hover { opacity:0.85; }
+
+  /* PRINT */
+  @media print {
+    body { background:white; padding:0; }
+    .page { box-shadow:none; border-radius:0; max-width:100%; }
+    .bottom-bar { display:none !important; }
+    .tag, .q-card { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .tag.on, .q-card.on, .sec-head, .sec-num, .sec-badge, .search-tip, .profile-card, .en-box {
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .section { break-inside:avoid; page-break-inside:avoid; }
+    @page { margin:12mm; size:A4; }
+    /* 인쇄 시 입력값 보이도록 */
+    textarea, input[type="text"], .en-blank {
+      background:white !important;
+      border-color:var(--border) !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-label">Middle School English · Research Activity</div>
+    <div class="header-title">🦸 숨은 영웅을 찾아라</div>
+    <div class="header-sub">Hidden Heroes in Our Society — 우리 사회를 조용히 지키는 영웅을 인터넷으로 조사해 봅시다</div>
+    <div class="info-row">
+      <div class="info-field">학년·반 <input class="info-input" type="text" placeholder="예) 1-3"></div>
+      <div class="info-field">번호 <input class="info-input" type="text" placeholder="번호" style="width:54px;"></div>
+      <div class="info-field">이름 <input class="info-input wide" type="text" placeholder="이름"></div>
+      <div class="info-field">날짜 <input class="info-input wide" type="text" placeholder="2026.  .  ."></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+      <div class="progress-label" id="prog-label">활동 완성도 0%</div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- STEP 1 -->
+    <div class="section s1">
+      <div class="sec-head">
+        <div class="sec-num">1</div>
+        <div class="sec-title">숨은 영웅의 활동 분야 선택</div>
+        <div class="sec-badge">Step 1 · Field Selection</div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-desc">조사하고 싶은 숨은 영웅의 활동 분야를 <strong>2가지 이상</strong> 골라 탭해 보세요.</div>
+        <div class="tag-group" id="domains">
+          <span class="tag" onclick="toggleTag(this)">🏥 의료·보건 (Healthcare)</span>
+          <span class="tag" onclick="toggleTag(this)">🚒 소방·재난 (Fire &amp; Rescue)</span>
+          <span class="tag" onclick="toggleTag(this)">🌿 환경·생태 (Environment)</span>
+          <span class="tag" onclick="toggleTag(this)">🤝 복지·사회서비스 (Social Welfare)</span>
+          <span class="tag" onclick="toggleTag(this)">📚 교육·돌봄 (Education &amp; Care)</span>
+          <span class="tag" onclick="toggleTag(this)">🛡️ 안전·경호 (Public Safety)</span>
+          <span class="tag" onclick="toggleTag(this)">🔬 과학·기술 (Science &amp; Tech)</span>
+          <span class="tag" onclick="toggleTag(this)">🌾 농업·식품 (Agriculture &amp; Food)</span>
+          <span class="tag" onclick="toggleTag(this)">🏛️ 문화·예술 보존 (Cultural Heritage)</span>
+          <span class="tag" onclick="toggleTag(this)">⚖️ 인권·법률지원 (Human Rights)</span>
+          <span class="tag" onclick="toggleTag(this)">🐾 동물보호 (Animal Welfare)</span>
+          <span class="tag" onclick="toggleTag(this)">✏️ 기타 (Other)</span>
+        </div>
+        <div class="field-group">
+          <div class="field-label">이 분야를 선택한 이유 (Why I chose this field)</div>
+          <textarea rows="2" placeholder="예) 환경 문제에 관심이 많아서 / I'm interested in environmental issues..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="section s2">
+      <div class="sec-head">
+        <div class="sec-num">2</div>
+        <div class="sec-title">인터넷 조사 — 키워드 &amp; 출처 기록</div>
+        <div class="sec-badge">Step 2 · Research</div>
+      </div>
+      <div class="sec-body">
+        <div class="search-tip">💡 <strong>검색 팁:</strong> 아래 추천 키워드를 참고해 검색하고, 뉴스·공공기관·다큐멘터리 등 신뢰할 수 있는 출처를 우선으로!</div>
+        <div class="kw-chips">
+          <span class="kw-chip">무명의 영웅</span>
+          <span class="kw-chip">숨은 공로자</span>
+          <span class="kw-chip">사회공헌 사례</span>
+          <span class="kw-chip">봉사자 이야기</span>
+          <span class="kw-chip">unsung heroes Korea</span>
+          <span class="kw-chip">hidden heroes documentary</span>
+          <span class="kw-chip">사회적 기여 인물</span>
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <div class="field-label">내가 사용한 검색 키워드 (Search keywords)</div>
+            <textarea rows="3" placeholder="예) 환경 숨은 영웅, eco activist Korea..."></textarea>
+          </div>
+          <div class="field-group">
+            <div class="field-label">참고 웹사이트 / 출처 (Sources &amp; URLs)</div>
+            <textarea rows="3" placeholder="예) www.yonhapnews.co.kr, Wikipedia..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="section s3">
+      <div class="sec-head">
+        <div class="sec-num">3</div>
+        <div class="sec-title">내가 찾은 숨은 영웅 프로필</div>
+        <div class="sec-badge">Step 3 · Hero Profile</div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-desc">조사한 숨은 영웅 1명(또는 단체)의 프로필을 정리하세요. 영어로도 도전해 보세요!</div>
+        <div class="profile-card">
+          <div class="avatar-row">
+            <div class="avatar">🦸</div>
+            <div style="flex:1;">
+              <div class="field-label">이름 또는 단체명 (Name / Organization)</div>
+              <input type="text" placeholder="예) 최재천 교수 / Prof. Choi Jae-cheon">
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:9px;">
+            <div class="field-group">
+              <div class="field-label">활동 분야 (Field of activity)</div>
+              <input type="text" placeholder="예) 환경·생태학 / Ecology">
+            </div>
+            <div class="field-group">
+              <div class="field-label">활동 지역 / 국가 (Region / Country)</div>
+              <input type="text" placeholder="예) 대한민국 / South Korea">
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">주요 활동 내용 — 영어로 1~2문장! (What they do — in English)</div>
+            <textarea rows="3" placeholder="예) He protects endangered species and educates people about biodiversity..."></textarea>
+          </div>
+          <div class="field-group" style="margin-bottom:0;">
+            <div class="field-label">사회적 영향 (Impact on society)</div>
+            <textarea rows="2" placeholder="예) Thanks to their work, endangered animals are better protected..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="section s4">
+      <div class="sec-head">
+        <div class="sec-num">4</div>
+        <div class="sec-title">영웅이 갖춰야 할 자질과 성품</div>
+        <div class="sec-badge">Step 4 · Qualities &amp; Character</div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-desc">숨은 영웅에게 필요한 자질을 골라 탭하고, 영어 표현도 함께 익혀 보세요.</div>
+        <div class="quality-grid" id="qualities">
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">용기</div><div class="q-en">Courage</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">공감 능력</div><div class="q-en">Empathy</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">책임감</div><div class="q-en">Responsibility</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">희생 정신</div><div class="q-en">Sacrifice</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">끈기 / 인내</div><div class="q-en">Perseverance</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">정직 / 성실</div><div class="q-en">Integrity</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">협동심</div><div class="q-en">Teamwork</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">창의성</div><div class="q-en">Creativity</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">전문성</div><div class="q-en">Expertise</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">겸손함</div><div class="q-en">Humility</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">리더십</div><div class="q-en">Leadership</div></div>
+          <div class="q-card" onclick="toggleQ(this)"><div class="q-ko">도전 정신</div><div class="q-en">Initiative</div></div>
+        </div>
+        <div class="field-group" style="margin-bottom:0;">
+          <div class="field-label">가장 중요한 자질과 이유 (Most important quality &amp; reason — try in English!)</div>
+          <textarea rows="2" placeholder="예) I think courage is the most important quality because a hero must be brave enough to help others even in dangerous situations."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="section s5">
+      <div class="sec-head">
+        <div class="sec-num">5</div>
+        <div class="sec-title">영웅을 지원하는 환경 &amp; 제도 조사</div>
+        <div class="sec-badge">Step 5 · Systems &amp; Support</div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-desc">숨은 영웅들을 돕는 제도나 환경을 조사하고, 내 아이디어도 적어 보세요.</div>
+        <div class="grid-2" style="margin-bottom:9px;">
+          <div class="field-group">
+            <div class="field-label">🏛️ 사회 제도 / 지원 정책 (Policies &amp; Systems)</div>
+            <textarea rows="3" placeholder="예) 자원봉사 인증제, 사회적 기업 지원법..."></textarea>
+          </div>
+          <div class="field-group">
+            <div class="field-label">🤝 지원 단체 / 조직 (Supporting Organizations)</div>
+            <textarea rows="3" placeholder="예) 한국자원봉사센터, WWF Korea..."></textarea>
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom:0;">
+          <div class="field-label">부족한 점 &amp; 내가 제안하는 개선 방향 (What's missing? My ideas)</div>
+          <textarea rows="2" placeholder="예) 숨은 영웅들이 더 많이 알려질 수 있도록 미디어 홍보 프로그램이 필요하다..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="section s6">
+      <div class="sec-head">
+        <div class="sec-num">6</div>
+        <div class="sec-title">나의 다짐 &amp; 영어 문장 완성</div>
+        <div class="sec-badge">Step 6 · Reflection &amp; English</div>
+      </div>
+      <div class="sec-body">
+        <div class="field-group">
+          <div class="field-label">활동 후 느낀 점 &amp; 나도 숨은 영웅이 되기 위해 실천할 것 (Reflection)</div>
+          <textarea rows="3" placeholder="예) 이번 조사를 통해 우리 주변에 많은 숨은 영웅들이 있다는 걸 알게 되었다. 나도 작은 것부터..."></textarea>
+        </div>
+        <div class="field-group" style="margin-bottom:14px;">
+          <div class="field-label">📝 영어 빈칸 채우기 — 문장을 완성해 보세요! (Complete the sentences)</div>
+          <div class="en-box">
+            <div class="en-line">
+              My hidden hero is <input class="en-blank" type="text" style="min-width:130px;" placeholder="이름/단체명">
+              who works as a <input class="en-blank" type="text" style="min-width:110px;" placeholder="직업/역할"> .
+            </div>
+            <div class="en-line">
+              He / She / They <input class="en-blank" type="text" style="min-width:220px;flex:1;" placeholder="주요 활동을 영어로"> .
+            </div>
+            <div class="en-line">
+              I think <input class="en-blank" type="text" style="min-width:100px;" placeholder="자질 영어로">
+              is the most important quality for a hidden hero.
+            </div>
+            <div class="en-line">
+              I want to become a hidden hero by <input class="en-blank" type="text" style="min-width:200px;flex:1;" placeholder="나의 다짐"> .
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div class="field-label" style="margin-bottom:3px;">이 활동이 얼마나 재미있었나요? (How fun was this?)</div>
+            <div class="star-row" id="stars">
+              <span class="star" onclick="rateStar(1)">★</span>
+              <span class="star" onclick="rateStar(2)">★</span>
+              <span class="star" onclick="rateStar(3)">★</span>
+              <span class="star" onclick="rateStar(4)">★</span>
+              <span class="star" onclick="rateStar(5)">★</span>
+            </div>
+          </div>
+          <div style="font-size:11px; color:var(--gray-500); text-align:right;">
+            작성 완료 후 아래 버튼으로 PDF 저장 📄
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="bar-hint">
+    ✅ 모든 칸을 채운 후 PDF로 저장하세요<br>
+    <span>Chrome: 인쇄 → 대상: PDF로 저장 &nbsp;|&nbsp; Safari: 공유 → PDF 생성</span>
+  </div>
+  <button class="print-btn" onclick="window.print()">
+    📄 PDF로 저장 / 인쇄
+  </button>
+</div>
+
+<script>
+  let dSel = 0, qSel = 0;
+
+  function toggleTag(el) {
+    el.classList.toggle('on');
+    dSel = document.querySelectorAll('#domains .on').length;
+    updateProgress();
+  }
+  function toggleQ(el) {
+    el.classList.toggle('on');
+    qSel = document.querySelectorAll('#qualities .on').length;
+    updateProgress();
+  }
+  function rateStar(n) {
+    document.querySelectorAll('#stars .star').forEach((s,i) => s.classList.toggle('lit', i < n));
+  }
+  function updateProgress() {
+    const tas = document.querySelectorAll('textarea');
+    let filled = 0;
+    tas.forEach(t => { if (t.value.trim().length > 5) filled++; });
+    const tScore = Math.min(filled / tas.length, 1);
+    const dScore = dSel >= 2 ? 1 : dSel / 2;
+    const qScore = qSel >= 3 ? 1 : qSel / 3;
+    const total = Math.round((tScore * 0.5 + dScore * 0.25 + qScore * 0.25) * 100);
+    document.getElementById('prog').style.width = total + '%';
+    document.getElementById('prog-label').textContent = '활동 완성도 ' + total + '%';
+  }
+  document.querySelectorAll('textarea, input[type="text"]').forEach(el => {
+    el.addEventListener('input', updateProgress);
+  });
+</script>
+
+</body>
+</html>
