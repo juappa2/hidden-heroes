@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Kim's English Class — 활동지 모음</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #1E1E1C;
+    --dark2: #2C2C2A;
+    --mid: #888780;
+    --light: #F7F6F2;
+    --border: #E0DED6;
+    --white: #FFFFFF;
+    --accent: #0F6E56;
+    --accent-light: #E1F5EE;
+    --accent2: #185FA5;
+    --accent2-light: #E6F1FB;
+    --amber: #EF9F27;
+    --amber-light: #FAEEDA;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--dark);
+    padding: 56px 32px 48px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 40px,
+      rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px
+    );
+  }
+  .hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--accent); background: rgba(15,110,86,0.15);
+    border: 1px solid rgba(15,110,86,0.3);
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    color: white; line-height: 1.15; margin-bottom: 10px;
+  }
+  .hero-title em { font-style: italic; color: rgba(255,255,255,0.55); }
+  .hero-sub { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 480px; }
+  .hero-meta {
+    display: flex; align-items: center; gap: 16px;
+    margin-top: 28px; flex-wrap: wrap;
+  }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.4); }
+  .meta-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+  /* ── MAIN ── */
+  .main { max-width: 760px; margin: 0 auto; padding: 36px 24px 60px; }
+
+  /* ── SECTION LABEL ── */
+  .sec-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 16px;
+  }
+  .sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* ── CARD GRID ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-bottom: 36px; }
+
+  /* ── WORKSHEET CARD ── */
+  .ws-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+  .ws-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10); transform: translateY(-2px); }
+  .ws-card:active { transform: translateY(0); }
+
+  .card-top {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .card-info { flex: 1; min-width: 0; }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 3px; line-height: 1.3; }
+  .card-sub { font-size: 12px; color: var(--mid); line-height: 1.5; }
+
+  .card-bottom {
+    padding: 11px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .card-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+  .card-arrow {
+    font-size: 16px; color: var(--mid);
+    transition: transform 0.15s, color 0.15s;
+  }
+  .ws-card:hover .card-arrow { transform: translateX(3px); color: var(--dark); }
+
+  /* CARD COLORS */
+  .c-teal .card-icon { background: var(--accent-light); }
+  .c-teal .card-tag { background: var(--accent-light); color: var(--accent); }
+  .c-blue .card-icon { background: var(--accent2-light); }
+  .c-blue .card-tag { background: var(--accent2-light); color: var(--accent2); }
+  .c-amber .card-icon { background: var(--amber-light); }
+  .c-amber .card-tag { background: var(--amber-light); color: var(--amber); }
+
+  /* COMING SOON */
+  .ws-card.soon { opacity: 0.55; cursor: default; pointer-events: none; }
+  .soon-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--border); color: var(--mid); font-weight: 500; }
+
+  /* ── HOW TO USE ── */
+  .howto {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 22px; margin-bottom: 36px;
+  }
+  .howto-title { font-size: 13px; font-weight: 700; margin-bottom: 14px; color: var(--dark); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .step { display: flex; align-items: flex-start; gap: 10px; }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--dark); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text { font-size: 12px; color: var(--mid); line-height: 1.6; }
+  .step-text strong { color: var(--dark); font-weight: 700; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--dark2); color: rgba(255,255,255,0.35);
+    text-align: center; padding: 20px;
+    font-size: 11px; line-height: 1.8;
+  }
+  .footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">English Class · Worksheets</div>
+    <div class="hero-title">Mr. Kim's<br><em>Activity Sheets</em></div>
+    <div class="hero-sub">중학교 영어 수업 활동지 모음입니다.<br>원하는 활동지를 선택해 작성 후 PDF로 저장하세요.</div>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="meta-dot"></div>대신중학교 영어과</div>
+      <div class="meta-item"><div class="meta-dot"></div>로그인 불필요</div>
+      <div class="meta-item"><div class="meta-dot"></div>작성 후 PDF 저장</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HOW TO USE -->
+  <div class="howto">
+    <div class="howto-title">📋 활동지 사용 방법</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>활동지 선택</strong><br>아래 카드를 탭해서 열기</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>내용 작성</strong><br>브라우저에서 바로 입력</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>PDF 저장</strong><br>하단 버튼 → 인쇄 → PDF</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>제출</strong><br>PDF를 클래스룸에 업로드</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1학기 활동지 -->
+  <div class="sec-label">1학기 활동지</div>
+  <div class="card-grid">
+
+    <!-- 숨은 영웅 -->
+    <a class="ws-card c-teal" href="hidden-heroes.html">
+      <div class="card-top">
+        <div class="card-icon">🦸</div>
+        <div class="card-info">
+          <div class="card-title">숨은 영웅을 찾아라</div>
+          <div class="card-sub">Hidden Heroes in Our Society<br>우리 사회의 숨은 영웅 인터넷 조사 활동</div>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-tags">
+          <span class="card-tag">리서치</span>
+          <span class="card-tag">영어쓰기</span>
+          <span class="card-tag">사회탐구</span>
+        </div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- 준비중 1 -->
+    <div class="ws-card soon c-blue">
+      <div class="card-top">
+        <div class="card-icon">🌍</div>
+        <div class="card-info">
+          <div class="card-title">환경 문제 탐구</div>
+          <div class="card-sub">Environmental Issues Around Us<br>주변의 환경 문제 조사 및 해결 방안</div>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-tags">
+          <span class="soon-badge">준비중</span>
+        </div>
+        <span class="card-arrow">→</span>
+      </div>
+    </div>
+
+    <!-- 준비중 2 -->
+    <div class="ws-card soon c-amber">
+      <div class="card-top">
+        <div class="card-icon">🗣️</div>
+        <div class="card-info">
+          <div class="card-title">나의 꿈 인터뷰</div>
+          <div class="card-sub">My Dream Job Interview<br>장래희망 영어 인터뷰 준비 활동</div>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-tags">
+          <span class="soon-badge">준비중</span>
+        </div>
+        <span class="card-arrow">→</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  대신중학교 영어과 · Mr. Kim<br>
+  <a href="https://juappa2.github.io/hidden-heroes">juappa2.github.io/hidden-heroes</a>
+</div>
+
+</body>
+</html>
